@@ -4,19 +4,19 @@
 
 Transformation2D::Transformation2D() :
 	m_matrix { {
-		{1.0, 0.0, 0.0},
+		{0.5, 0.0, 0.0},
 		{0.0, 1.0, 0.0},
 		{0.0, 0.0, 1.0}
 	} }
 {}
 
-std::array<double, 3> Transformation2D::Product( const std::array<double, 3>& point )
+std::array<double, 3> Transformation2D::Product( const std::array<double, 3>& input )
 {
 	std::array<double, 3> result = { 0.0, 0.0, 0.0 };
 
 	for ( int row_index = 0; row_index < 3; ++row_index ) {
 		for ( int column_index = 0; column_index < 3; ++column_index ) {
-			result[row_index] += m_matrix[row_index][column_index] * result[column_index];
+			result[row_index] += m_matrix[row_index][column_index] * input[column_index];
 		}
 	}
 

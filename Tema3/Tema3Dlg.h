@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <vector>
 
 // CTema3Dlg dialog
 class CTema3Dlg : public CDialogEx
@@ -29,5 +30,17 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+
+	void OnLButtonDown( UINT, CPoint );
+	void OnLButtonUp( UINT, CPoint );
+	void OnMouseMove( UINT, CPoint );
+	void OnRButtonDown( UINT, CPoint );
+
 	DECLARE_MESSAGE_MAP()
+
+private:
+	std::vector<CPoint> m_selectedPoints;
+	CPoint m_dragLastPosition;
+	bool m_bPolygonIsFinished;
+	bool m_bIsDragging;
 };
