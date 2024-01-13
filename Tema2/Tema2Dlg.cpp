@@ -17,9 +17,10 @@
 
 
 
-CTema2Dlg::CTema2Dlg( CWnd* pParent /*=nullptr*/ )
-	: CDialogEx( IDD_TEMA2_DIALOG, pParent ),
-	m_bPolygonIsFinished( false )
+CTema2Dlg::CTema2Dlg( CWnd* pParent /*=nullptr*/ ) :
+	CDialogEx( IDD_TEMA2_DIALOG, pParent ),
+	m_bPolygonIsFinished( false ),
+	m_bIsDragging( false )
 {
 	m_hIcon = AfxGetApp()->LoadIcon( IDR_MAINFRAME );
 }
