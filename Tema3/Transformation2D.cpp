@@ -2,35 +2,41 @@
 
 #include "Transformation2D.h"
 
+
 Transformation2D::Transformation2D() :
 	m_matrix { {
-		{0.5, 0.0, 0.0},
+		{1.0, 0.0, 0.0},
 		{0.0, 1.0, 0.0},
 		{0.0, 0.0, 1.0}
 	} }
 {}
 
-std::array<double, 3> Transformation2D::Product( const std::array<double, 3>& input )
+Transformation2D::Transformation2D( std::array<std::array<double, SIZE>, SIZE> matrix )
+	: m_matrix( matrix )
 {
-	std::array<double, 3> result = { 0.0, 0.0, 0.0 };
+}
 
-	for ( int row_index = 0; row_index < 3; ++row_index ) {
-		for ( int column_index = 0; column_index < 3; ++column_index ) {
-			result[row_index] += m_matrix[row_index][column_index] * input[column_index];
+std::array<double, SIZE> Transformation2D::Product( const std::array<double, SIZE>& point )
+{
+	std::array<double, SIZE> result = { 0.0, 0.0, 0.0 };
+
+	for ( size_t row_index = 0; row_index < SIZE; ++row_index ) {
+		for ( size_t column_index = 0; column_index < SIZE; ++column_index ) {
+			result[row_index] += m_matrix[row_index][column_index] * point[column_index];
 		}
 	}
 
 	return result;
 }
 
-std::array<std::array<double, 3>, 3> Transformation2D::Product( const std::array<std::array<double, 3>, 3>& matrix )
+std::array<std::array<double, SIZE>, SIZE> Transformation2D::Product( const std::array<std::array<double, SIZE>, SIZE>& matrix )
 {
-	std::array<std::array<double, 3>, 3> result;
+	std::array<std::array<double, SIZE>, SIZE> result;
 
-	for ( int i = 0; i < 3; ++i ) {
-		for ( int j = 0; j < 3; ++j ) {
+	for ( int i = 0; i < SIZE; ++i ) {
+		for ( int j = 0; j < SIZE; ++j ) {
 			result[i][j] = 0;
-			for ( int k = 0; k < 3; ++k ) {
+			for ( int k = 0; k < SIZE; ++k ) {
 				result[i][j] += m_matrix[i][k] * matrix[k][j];
 			}
 		}
@@ -39,14 +45,15 @@ std::array<std::array<double, 3>, 3> Transformation2D::Product( const std::array
 	return result;
 }
 
-void Transformation2D::Compose( const std::array<std::array<double, 3>, 3>& otherMatrix )
+void Transformation2D::Compose( const std::array<std::array<double, SIZE>, SIZE>& otherMatrix )
 {
 	m_matrix = Product( otherMatrix );
 }
 
 void Transformation2D::Translate( double dx, double dy )
 {
-	std::array<std::array<double, 3>, 3> translationMatrix { {
+	std::array<std::array<double, SIZE>, SIZE> translationMatrix {
+		{
 			{1.0, 0.0, dx},
 			{0.0, 1.0, dy},
 			{0.0, 0.0, 1.0}
@@ -57,7 +64,8 @@ void Transformation2D::Translate( double dx, double dy )
 
 void Transformation2D::RotateOrigin( double cosineAlpha, double sineAlpha )
 {
-	std::array<std::array<double, 3>, 3> rotationMatrix { {
+	std::array<std::array<double, SIZE>, SIZE> rotationMatrix {
+		{
 			{cosineAlpha, -sineAlpha, 0.0},
 			{sineAlpha, cosineAlpha, 0.0},
 			{0.0, 0.0, 1.0}
@@ -68,7 +76,7 @@ void Transformation2D::RotateOrigin( double cosineAlpha, double sineAlpha )
 
 void Transformation2D::ScaleOrigin( double Sx, double Sy )
 {
-	std::array<std::array<double, 3>, 3> scalingMatrix { {
+	std::array<std::array<double, SIZE>, SIZE> scalingMatrix { {
 			{Sx, 0.0, 0.0},
 			{0.0, Sy, 0.0},
 			{0.0, 0.0, 1.0}

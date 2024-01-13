@@ -5,6 +5,9 @@
 #pragma once
 
 #include <vector>
+#include "Transformation2D.h"
+#include "Polygon.h"
+
 
 // CTema3Dlg dialog
 class CTema3Dlg : public CDialogEx
@@ -31,16 +34,20 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 
-	void OnLButtonDown( UINT, CPoint );
-	void OnLButtonUp( UINT, CPoint );
-	void OnMouseMove( UINT, CPoint );
-	void OnRButtonDown( UINT, CPoint );
-
 	DECLARE_MESSAGE_MAP()
 
 private:
-	std::vector<CPoint> m_selectedPoints;
-	CPoint m_dragLastPosition;
+	void OnLButtonDown( UINT, CPoint );
+	void OnMouseMove( UINT, CPoint );
+	void OnRButtonDown( UINT, CPoint );
+	BOOL OnMouseWheel( UINT, short, CPoint );
+
+private:
+	Transformation2D m_transformation;
+
+	//std::vector<CPoint> m_selectedPoints;
+	CPolygon m_polygon;
+	CPoint m_lastPoint;
+
 	bool m_bPolygonIsFinished;
-	bool m_bIsDragging;
 };

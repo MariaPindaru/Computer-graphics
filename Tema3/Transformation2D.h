@@ -1,5 +1,8 @@
 #pragma once
+
+#include <vector>
 #include <array>
+
 //Membrii clasei( private ) :
 //	-Produs de doua matrici
 //	Functiile clasei( publice ) :
@@ -16,14 +19,18 @@
 //	- Simetrie fata de o dreapta( primim dx, dy, vx, vy )
 //	- Scalare fata de un punct P
 
+#define SIZE 3
+
 class Transformation2D
 {
 public:
 	Transformation2D();
+	Transformation2D( std::array<std::array<double, SIZE>, SIZE> matrix);
 
-	std::array<std::array<double, 3>, 3> Product( const std::array<std::array<double, 3>, 3>& matrix );
-	std::array<double, 3> Product( const std::array<double, 3>& point );
-	void Compose( const std::array<std::array<double, 3>, 3>& otherMatrix );
+public:
+
+	std::array<double, SIZE> Product( const std::array<double, SIZE>& point );
+	void Compose( const std::array<std::array<double, SIZE>, SIZE>& otherMatrix );
 
 	void Translate( double dx, double dy );
 	void RotateOrigin( double cosineAlpha, double sineAlpha );
@@ -32,8 +39,10 @@ public:
 	void SymmetryPoint( double xp, double yp );
 	void SymmetryLine( double xp, double yp, double vx, double vy );
 
+private:
+	std::array<std::array<double, SIZE>, SIZE> Product( const std::array<std::array<double, SIZE>, SIZE>& matrix );
 
 private:
-	std::array<std::array<double, 3>, 3> m_matrix;
+	std::array<std::array<double, SIZE>, SIZE> m_matrix;
 
 };

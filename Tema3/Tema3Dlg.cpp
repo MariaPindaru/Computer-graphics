@@ -2,6 +2,8 @@
 // Tema3Dlg.cpp : implementation file
 //
 
+#include <cmath>
+
 #include "pch.h"
 #include "framework.h"
 #include "Tema3.h"
@@ -12,14 +14,14 @@
 #define new DEBUG_NEW
 #endif
 
-#include "Transformation2D.h"
-
+#define PI 3.14159265358979323846
 
 // CTema3Dlg dialog
 
 
-CTema3Dlg::CTema3Dlg( CWnd* pParent /*=nullptr*/ )
-	: CDialogEx( IDD_TEMA3_DIALOG, pParent )
+CTema3Dlg::CTema3Dlg( CWnd* pParent /*=nullptr*/ ) :
+	CDialogEx( IDD_TEMA3_DIALOG, pParent ),
+	m_bPolygonIsFinished( false )
 {
 	m_hIcon = AfxGetApp()->LoadIcon( IDR_MAINFRAME );
 }
@@ -39,6 +41,7 @@ BEGIN_MESSAGE_MAP( CTema3Dlg, CDialogEx )
 	ON_WM_RBUTTONDOWN()
 
 	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -54,7 +57,7 @@ BOOL CTema3Dlg::OnInitDialog()
 	SetIcon( m_hIcon, FALSE );		// Set small icon
 
 	// TODO: Add extra initialization here
-	SetWindowPos( NULL, 0, 0, 700, 600, SWP_NOMOVE | SWP_NOZORDER );
+	SetWindowPos( NULL, 0, 0, 900, 600, SWP_NOMOVE | SWP_NOZORDER );
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -67,7 +70,7 @@ void CTema3Dlg::OnPaint()
 {
 	CPaintDC dc( this ); // device context for painting
 
-	if ( m_selectedPoints.size() )
+	if ( m_polygon.IsValid() )
 	{
 		CPen pen( PS_SOLID, 2, RGB( 0, 0, 0 ) );
 		CPen* pOldPen = dc.SelectObject( &pen );
@@ -75,13 +78,14 @@ void CTema3Dlg::OnPaint()
 		CBrush brush( RGB( 194, 26, 17 ) );
 		CBrush* pOldBrush = dc.SelectObject( &brush );
 
-		POINT* points = new POINT[m_selectedPoints.size()];
-		for ( size_t i = 0; i < m_selectedPoints.size(); ++i )
+		std::vector<CPoint> coordinates = m_polygon.GetCoordinates();
+		POINT* points = new POINT[coordinates.size()];
+		for ( size_t i = 0; i < coordinates.size(); ++i )
 		{
-			points[i] = m_selectedPoints[i];
+			points[i] = coordinates[i];
 		}
 
-		dc.Polygon( points, static_cast< int >( m_selectedPoints.size() ) );
+		dc.Polygon( points, static_cast< int >( coordinates.size() ) );
 
 		// clean up
 		delete[] points;
@@ -101,50 +105,52 @@ void CTema3Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	if ( m_bPolygonIsFinished )
 	{
-		Transformation2D transformation;
-
-		for ( auto& currentPoint: m_selectedPoints )
-		{
-			auto coordinate = std::array<double, 3>{ ( double ) currentPoint.x, ( double ) currentPoint.y, 0.0 };
-			auto result = transformation.Product( coordinate );
-			currentPoint.x = result[0];
-			currentPoint.y = result[1];
-		}
-
-		Invalidate();
+		m_lastPoint = point;
 	}
 	else
 	{
-		// collect point coordinates
-		m_selectedPoints.push_back( point );
+		m_polygon.AddCoordinate( point );
+		m_polygon.Transform();
 		Invalidate();
 	}
-}
-
-void CTema3Dlg::OnLButtonUp( UINT nFlags, CPoint point )
-{
-	m_bIsDragging = false;
 }
 
 void CTema3Dlg::OnMouseMove( UINT nFlags, CPoint point )
 {
-	if ( m_bIsDragging )
+	if ( !m_bPolygonIsFinished )
+		return;
+
+	if ( ( nFlags & MK_CONTROL ) && ( nFlags & MK_LBUTTON ) ) 
 	{
-		// calculate the offset between the current position and the previous position of the drag
-		CSize offset = point - m_dragLastPosition;
-		m_dragLastPosition = point;
+		CPoint center = m_polygon.GetCenter(); 
+		CSize offset = point - m_lastPoint; // n pixels
+		double angle = static_cast< double >( offset.cx ) / 100.0;  // n/100 radians
 
-		for ( size_t i = 0; i < m_selectedPoints.size(); ++i )
-		{
-			m_selectedPoints[i] += offset;
-		}
-
+		m_polygon.Rotate( center.x, center.y, cos( angle ), sin( angle ) );
 		Invalidate();
+		m_lastPoint = point;
+	}
+
+	else if ( nFlags & MK_LBUTTON ) 
+	{
+		CSize offset = point - m_lastPoint;
+		m_polygon.Translate( offset.cx, offset.cy );
+		Invalidate();
+		m_lastPoint = point;
 	}
 }
 
 void CTema3Dlg::OnRButtonDown( UINT nFlags, CPoint point )
 {
 	m_bPolygonIsFinished = true;
+}
+
+BOOL CTema3Dlg::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
+{
+	float scaleFactor = zDelta > 0 ? 1.1f : 0.9f; 
+	m_polygon.Scale( scaleFactor );
+	Invalidate();
+
+	return CDialogEx::OnMouseWheel( nFlags, zDelta, point );
 }
 
