@@ -120,9 +120,9 @@ void CTema3Dlg::OnMouseMove( UINT nFlags, CPoint point )
 	if ( !m_bPolygonIsFinished )
 		return;
 
-	if ( ( nFlags & MK_CONTROL ) && ( nFlags & MK_LBUTTON ) ) 
+	if ( ( nFlags & MK_CONTROL ) && ( nFlags & MK_LBUTTON ) )
 	{
-		CPoint center = m_polygon.GetCenter(); 
+		CPoint center = m_polygon.GetCenter();
 		CSize offset = point - m_lastPoint; // n pixels
 		double angle = static_cast< double >( offset.cx ) / 100.0;  // n/100 radians
 
@@ -131,7 +131,7 @@ void CTema3Dlg::OnMouseMove( UINT nFlags, CPoint point )
 		m_lastPoint = point;
 	}
 
-	else if ( nFlags & MK_LBUTTON ) 
+	else if ( nFlags & MK_LBUTTON )
 	{
 		CSize offset = point - m_lastPoint;
 		m_polygon.Translate( offset.cx, offset.cy );
@@ -147,9 +147,13 @@ void CTema3Dlg::OnRButtonDown( UINT nFlags, CPoint point )
 
 BOOL CTema3Dlg::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
 {
-	float scaleFactor = zDelta > 0 ? 1.1f : 0.9f; 
-	m_polygon.Scale( scaleFactor );
-	Invalidate();
+	if ( nFlags & MK_CONTROL )
+	{
+		float scaleFactor = zDelta > 0 ? 1.1f : 0.9f;
+		m_polygon.Scale( scaleFactor );
+		Invalidate();
+	}
+
 
 	return CDialogEx::OnMouseWheel( nFlags, zDelta, point );
 }
