@@ -21,24 +21,24 @@
 
 double f( double u ) {
 	// elipsa
-	//return cos( u );
+	return cos( u );
 
 	// spirala
 	//return  u * cos( u );
 
 	// parabola
-	return u;
+	//return u;
 }
 
 double g( double u ) {
 	// elipsa
-	//return 2 * sin( u );
+	return 2 * sin( u );
 
 	// spirala
 	//return u * sin( u );
 
 	// parabola
-	return u * u;
+	//return u * u;
 }
 
 std::vector<Point> generateCurve( double a, double b, int numPoints ) {
@@ -52,7 +52,10 @@ std::vector<Point> generateCurve( double a, double b, int numPoints ) {
 }
 
 void transformPoints( std::vector<Point>& points, double screenWidth, double screenHeight ) {
-	// Pasul 1
+
+	Point origin( 0, 0 );
+
+	// Pasul 1 - translatam punctele Pi
 	double dx = std::min_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.x < b.x; } )->x;
 	double dy = std::min_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.y < b.y; } )->y;
 	for ( auto& p : points ) {
@@ -60,7 +63,7 @@ void transformPoints( std::vector<Point>& points, double screenWidth, double scr
 		p.y -= dy;
 	}
 
-	// Pasul 2
+	// Pasul 2 - scalare a punctelor P'i
 	double maxX = std::max_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.x < b.x; } )->x;
 	double maxY = std::max_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.y < b.y; } )->y;
 	double scaleX = screenWidth / maxX;
@@ -71,7 +74,7 @@ void transformPoints( std::vector<Point>& points, double screenWidth, double scr
 		p.y *= scale;
 	}
 
-	// Pasul 3
+	// Pasul 3 - translatare in centrul ferestrei
 	maxX *= scale;
 	maxY *= scale;
 	double offsetX = ( screenWidth - maxX ) / 2;
@@ -81,7 +84,7 @@ void transformPoints( std::vector<Point>& points, double screenWidth, double scr
 		p.y += offsetY;
 	}
 
-	// Pasul 4
+	// Pasul 4 - simetrie pe verticala
 	for ( auto& p : points ) {
 		p.y = screenHeight - p.y;
 	}
@@ -130,20 +133,36 @@ void CTema4Dlg::OnPaint()
 {
 	CPaintDC pdc( this );
 	// elipsa
-	//double a = 0, b = 2 * PI;
+	double a = 0, b = 2 * PI;
 
 	// spirala 
 	//double a = 0, b = 20;
 
 	// parabola
-	double a = -5, b = 5;
+	//double a = -5, b = 5;
 
 	int numPoints = 3000;
 	double screenWidth = 800;
 	double screenHeight = 500;
 
 	m_curvePoints = generateCurve( a, b, numPoints );
+	
+	// push origin -> tranformations are applied 
+	Point origin( 0, 0 );
+	m_curvePoints.push_back( origin );
+	
 	transformPoints( m_curvePoints, screenWidth, screenHeight );
+
+	// get the transformed origin and remove from vector
+	origin = m_curvePoints.back();
+	m_curvePoints.pop_back();
+
+	// draw xOy
+	pdc.MoveTo( origin.x, 0 );
+	pdc.LineTo( origin.x, screenHeight );
+
+	pdc.MoveTo( 0, origin.y );
+	pdc.LineTo( screenWidth, origin.y );
 
 	POINT* points = new POINT[m_curvePoints.size()];
 	for ( size_t i = 0; i < m_curvePoints.size(); ++i )
@@ -151,6 +170,7 @@ void CTema4Dlg::OnPaint()
 		points[i].x = m_curvePoints[i].x;
 		points[i].y = m_curvePoints[i].y;
 	}
+
 	pdc.Polyline( points, m_curvePoints.size() );
 }
 
