@@ -18,12 +18,22 @@
 
 // CTema3Dlg dialog
 
+bool isCoordinateValid( const CPoint& point )
+{
+	return point.x != 0 && point.y != 0;
+}
+
+bool isLineValid( const std::pair<CPoint, CPoint>& line )
+{
+	return isCoordinateValid( line.first ) && isCoordinateValid( line.second );
+}
 
 CTema3Dlg::CTema3Dlg( CWnd* pParent /*=nullptr*/ ) :
 	CDialogEx( IDD_TEMA3_DIALOG, pParent ),
 	m_bPolygonIsFinished( false )
 {
 	m_hIcon = AfxGetApp()->LoadIcon( IDR_MAINFRAME );
+	m_symmetryLine = std::make_pair( CPoint(), CPoint() );
 }
 
 void CTema3Dlg::DoDataExchange( CDataExchange* pDX )
@@ -87,6 +97,12 @@ void CTema3Dlg::OnPaint()
 
 		dc.Polygon( points, static_cast< int >( coordinates.size() ) );
 
+		if ( isLineValid( m_symmetryLine ) )
+		{
+			dc.MoveTo( m_symmetryLine.first );
+			dc.LineTo( m_symmetryLine.second );
+		}
+
 		// clean up
 		delete[] points;
 		dc.SelectObject( pOldBrush );
@@ -103,22 +119,42 @@ HCURSOR CTema3Dlg::OnQueryDragIcon()
 
 void CTema3Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 {
-	if ( m_bPolygonIsFinished )
+	if ( isLineValid( m_symmetryLine ) )
+	{
+		return;
+	}
+
+	if ( m_bCreatingSymmetryLine )
+	{
+		if ( !isCoordinateValid( m_symmetryLine.first ) )
+		{
+			m_symmetryLine.first = point;
+		}
+		else
+		{
+			m_symmetryLine.second = point;
+			m_polygon.Symmetry( m_symmetryLine.first, m_symmetryLine.second );
+		}
+	}
+
+	else if ( m_bPolygonIsFinished )
 	{
 		m_lastPoint = point;
 	}
+
 	else
 	{
 		m_polygon.AddCoordinate( point );
 		m_polygon.Transform();
-		Invalidate();
 	}
+
+	Invalidate();
 }
 
 void CTema3Dlg::OnMouseMove( UINT nFlags, CPoint point )
 {
 	if ( !m_bPolygonIsFinished )
-		return;
+		return CDialogEx::OnMouseMove( nFlags, point );
 
 	if ( ( nFlags & MK_CONTROL ) && ( nFlags & MK_LBUTTON ) )
 	{
@@ -142,7 +178,11 @@ void CTema3Dlg::OnMouseMove( UINT nFlags, CPoint point )
 
 void CTema3Dlg::OnRButtonDown( UINT nFlags, CPoint point )
 {
-	m_bPolygonIsFinished = true;
+	if ( !m_bPolygonIsFinished )
+		m_bPolygonIsFinished = true;
+
+	else if ( m_bPolygonIsFinished && !isLineValid( m_symmetryLine ) )
+		m_bCreatingSymmetryLine = true;
 }
 
 BOOL CTema3Dlg::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )

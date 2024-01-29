@@ -17,6 +17,7 @@ public:
 	void Translate( double dx, double dy );
 	void Rotate( double dx, double dy, double cosineAlpha, double sineAlpha );
 	void Scale( float factor );
+	void Symmetry( const CPoint& start, const CPoint& end );
 
 	CPoint GetCenter() const;
 

@@ -74,11 +74,11 @@ void Transformation2D::RotateOrigin( double cosineAlpha, double sineAlpha )
 	Compose( rotationMatrix );
 }
 
-void Transformation2D::ScaleOrigin( double Sx, double Sy )
+void Transformation2D::ScaleOrigin( double x, double y )
 {
 	std::array<std::array<double, SIZE>, SIZE> scalingMatrix { {
-			{Sx, 0.0, 0.0},
-			{0.0, Sy, 0.0},
+			{x, 0.0, 0.0},
+			{0.0, y, 0.0},
 			{0.0, 0.0, 1.0}
 		} };
 
@@ -99,17 +99,17 @@ void Transformation2D::SymmetryPoint( double xp, double yp )
 	Translate( -xp, -yp );
 }
 
-void Transformation2D::SymmetryLine( double xp, double yp, double vx, double vy )
+void Transformation2D::SymmetryLine( double startX, double startY, double endX, double endY )
 {
-	double length = sqrt( vx * vx + vy * vy );
+	double length = sqrt( endX * endX + endY * endY );
 	if ( length != 0 ) {
-		double cosineAlpha = vx / length;
-		double sineAlpha = vy / length;
+		double cosineAlpha = endX / length;
+		double sineAlpha = endY / length;
 
-		Translate( xp, yp );
+		Translate( startX, startY );
 		RotateOrigin( cosineAlpha, sineAlpha );
 		ScaleOrigin( 1, -1 );
 		RotateOrigin( cosineAlpha, -sineAlpha );
-		Translate( -xp, -yp );
+		Translate( -startX, -startY );
 	}
 }

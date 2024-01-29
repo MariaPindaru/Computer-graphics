@@ -43,11 +43,11 @@ private:
 	BOOL OnMouseWheel( UINT, short, CPoint );
 
 private:
-	Transformation2D m_transformation;
+	std::pair<CPoint, CPoint> m_symmetryLine;
 
-	//std::vector<CPoint> m_selectedPoints;
 	CPolygon m_polygon;
 	CPoint m_lastPoint;
 
 	bool m_bPolygonIsFinished;
+	bool m_bCreatingSymmetryLine;
 };

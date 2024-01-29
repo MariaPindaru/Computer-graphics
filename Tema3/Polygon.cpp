@@ -50,6 +50,14 @@ void CPolygon::Scale( float factor )
 	ApplyTransformationOnCoordinates( transformation );
 }
 
+
+void CPolygon::Symmetry( const CPoint& start, const CPoint& end )
+{
+	Transformation2D transformation;
+	transformation.SymmetryLine( start.x, start.y, end.x, end.y );
+	ApplyTransformationOnCoordinates( transformation );
+}
+
 CPoint CPolygon::GetCenter() const
 {
 	{
