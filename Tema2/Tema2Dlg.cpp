@@ -70,10 +70,10 @@ void CTema2Dlg::OnPaint()
 	if ( m_selectedPoints.size() )
 	{
 		CPen pen( PS_SOLID, 2, RGB( 0, 0, 0 ) );
-		CPen* pOldPen = dc.SelectObject( &pen );
+		dc.SelectObject( &pen );
 
 		CBrush brush( RGB( 194, 26, 17 ) );
-		CBrush* pOldBrush = dc.SelectObject( &brush );
+		dc.SelectObject( &brush );
 
 		POINT* points = new POINT[m_selectedPoints.size()];
 		for ( size_t i = 0; i < m_selectedPoints.size(); ++i )
@@ -85,8 +85,6 @@ void CTema2Dlg::OnPaint()
 
 		// clean up
 		delete[] points;
-		dc.SelectObject( pOldBrush );
-		dc.SelectObject( pOldPen );
 	}
 }
 
