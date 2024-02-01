@@ -74,7 +74,7 @@ BOOL CTema5Dlg::OnInitDialog()
 	SetIcon( m_hIcon, TRUE );			// Set big icon
 	SetIcon( m_hIcon, FALSE );		// Set small icon
 
-	// TODO: Add extra initialization here
+	SetWindowPos( NULL, 0, 0, 700, 600, SWP_NOMOVE | SWP_NOZORDER );
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
