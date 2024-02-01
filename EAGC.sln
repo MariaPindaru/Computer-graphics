@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tema3", "Tema3\Tema3.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tema4", "Tema4\Tema4.vcxproj", "{33F24287-6AD3-4A62-B839-76D02533463F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tema5", "Tema5\Tema5.vcxproj", "{EEAFC4FA-FABC-4E2E-923F-C43C70239762}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{33F24287-6AD3-4A62-B839-76D02533463F}.Release|x64.Build.0 = Release|x64
 		{33F24287-6AD3-4A62-B839-76D02533463F}.Release|x86.ActiveCfg = Release|Win32
 		{33F24287-6AD3-4A62-B839-76D02533463F}.Release|x86.Build.0 = Release|Win32
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Debug|x64.ActiveCfg = Debug|x64
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Debug|x64.Build.0 = Debug|x64
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Debug|x86.ActiveCfg = Debug|Win32
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Debug|x86.Build.0 = Debug|Win32
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Release|x64.ActiveCfg = Release|x64
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Release|x64.Build.0 = Release|x64
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Release|x86.ActiveCfg = Release|Win32
+		{EEAFC4FA-FABC-4E2E-923F-C43C70239762}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
