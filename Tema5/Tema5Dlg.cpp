@@ -17,27 +17,6 @@
 
 // CTema5Dlg dialog
 
-double LagrangeInterpolation( const std::vector<double>& x, const std::vector<double>& y, double xInterpolate ) {
-	double result = 0.0;
-	int pointsCount = x.size();
-
-	for ( size_t i = 0; i < pointsCount; ++i )
-	{
-		double temp = y.at(i);
-		for ( size_t j = 0; j < pointsCount; ++j )
-		{
-			if ( i != j )
-			{
-				temp *= ( xInterpolate - x.at(j) ) / ( x.at(i) - x.at(j) );
-			}
-		}
-
-		result += temp;
-	}
-
-	return result;
-}
-
 CTema5Dlg::CTema5Dlg( CWnd* pParent /*=nullptr*/ )
 	: CDialogEx( IDD_TEMA5_DIALOG, pParent )
 	, m_bCollectingPoints( true )
@@ -99,7 +78,7 @@ void CTema5Dlg::OnPaint()
 	}
 
 	if ( !m_bCollectingPoints ) {
-		DrawInterpolationPolynomial( &dc );
+		DrawCurve( &dc );
 	}
 }
 
@@ -176,7 +155,28 @@ void CTema5Dlg::OnMouseMove( UINT nFlags, CPoint point )
 	Invalidate();
 }
 
-void CTema5Dlg::DrawInterpolationPolynomial( CDC* pDC )
+double LagrangeInterpolation( const std::vector<double>& x, const std::vector<double>& y, double xInterpolate ) {
+	double result = 0.0;
+	int pointsCount = x.size();
+
+	for ( size_t i = 0; i < pointsCount; ++i )
+	{
+		double temp = y.at( i );
+		for ( size_t j = 0; j < pointsCount; ++j )
+		{
+			if ( i != j )
+			{
+				temp *= ( xInterpolate - x.at( j ) ) / ( x.at( i ) - x.at( j ) );
+			}
+		}
+
+		result += temp;
+	}
+
+	return result;
+}
+
+void CTema5Dlg::DrawCurve( CDC* pDC )
 {
 	std::vector<double> xCoordinates, yCoordinates;
 	xCoordinates.reserve( m_points.size() );

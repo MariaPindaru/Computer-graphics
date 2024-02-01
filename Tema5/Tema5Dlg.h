@@ -37,7 +37,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private: 
-	void DrawInterpolationPolynomial( CDC* pDC );
+	void DrawCurve( CDC* pDC );
 
 private:
 	std::vector<CPoint> m_points;
