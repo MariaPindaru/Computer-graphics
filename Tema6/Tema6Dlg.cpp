@@ -114,7 +114,7 @@ void CTema6Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 	{
 		for ( size_t index = 0; index < m_points.size(); ++index )
 		{
-			if ( abs( point.x - m_points[index].x ) < 5 && abs( point.y - m_points[index].y ) < 5 )
+			if ( abs( point.x - m_points[index].x ) < DOT_SIZE && abs( point.y - m_points[index].y ) < DOT_SIZE )
 			{
 				m_selectedPoint = &m_points[index];
 				break;
