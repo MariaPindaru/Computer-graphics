@@ -67,19 +67,16 @@ BOOL CTema6Dlg::OnInitDialog()
 void CTema6Dlg::OnPaint()
 {
 	CPaintDC dc( this );
-	//dc.SetTextColor( RGB( 255, 0, 0 ) );
 
-	for ( const auto& point : m_points ) {
+	for ( const auto& point : m_points ) 
+	{
 		CBrush redBrush( RGB( 255, 0, 0 ) );
 		dc.SelectObject( &redBrush );
 		dc.Ellipse( point.x - DOT_SIZE, point.y - DOT_SIZE, point.x + DOT_SIZE, point.y + DOT_SIZE );
-
-		/*	CString str;
-			str.Format( _T( "(%d, %d)" ), point.x, point.y );
-			dc.TextOut( point.x + 10, point.y, str );*/
 	}
 
-	if ( !m_bCollectingPoints ) {
+	if ( !m_bCollectingPoints ) 
+	{
 		DrawCurve( &dc );
 	}
 }
