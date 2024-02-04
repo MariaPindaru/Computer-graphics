@@ -103,7 +103,8 @@ void CTema6Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	if ( m_bCollectingPoints )
 	{
-		if ( m_points.empty() || point.x > m_points.back().x ) {
+		if ( m_points.empty() || point.x > m_points.back().x ) 
+		{
 			m_points.push_back( point );
 		}
 	}
