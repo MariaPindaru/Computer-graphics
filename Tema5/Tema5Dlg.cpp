@@ -11,6 +11,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "LagrangeInterpolation.h"
 
 #define DOT_SIZE 7
 
@@ -65,19 +66,16 @@ BOOL CTema5Dlg::OnInitDialog()
 void CTema5Dlg::OnPaint()
 {
 	CPaintDC dc( this );
-	//dc.SetTextColor( RGB( 255, 0, 0 ) );
 
-	for ( const auto& point : m_points ) {
+	for ( const auto& point : m_points )
+	{
 		CBrush redBrush( RGB( 255, 0, 0 ) );
 		dc.SelectObject( &redBrush );
 		dc.Ellipse( point.x - DOT_SIZE, point.y - DOT_SIZE, point.x + DOT_SIZE, point.y + DOT_SIZE );
-
-	/*	CString str;
-		str.Format( _T( "(%d, %d)" ), point.x, point.y );
-		dc.TextOut( point.x + 10, point.y, str );*/
 	}
 
-	if ( !m_bCollectingPoints ) {
+	if ( !m_bCollectingPoints )
+	{
 		DrawCurve( &dc );
 	}
 }
@@ -104,7 +102,8 @@ void CTema5Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	if ( m_bCollectingPoints )
 	{
-		if ( m_points.empty() || point.x > m_points.back().x ) {
+		if ( m_points.empty() || point.x > m_points.back().x ) 
+		{
 			m_points.push_back( point );
 		}
 	}
@@ -112,7 +111,7 @@ void CTema5Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 	{
 		for ( size_t index = 0; index < m_points.size(); ++index )
 		{
-			if ( abs( point.x - m_points[index].x ) < 5 && abs( point.y - m_points[index].y ) < 5 )
+			if ( abs( point.x - m_points[index].x ) < DOT_SIZE && abs( point.y - m_points[index].y ) < DOT_SIZE )
 			{
 				m_selectedPoint = &m_points[index];
 				break;
@@ -153,27 +152,6 @@ void CTema5Dlg::OnMouseMove( UINT nFlags, CPoint point )
 	m_selectedPoint->y = point.y;
 
 	Invalidate();
-}
-
-double LagrangeInterpolation( const std::vector<double>& x, const std::vector<double>& y, double xInterpolate ) {
-	double result = 0.0;
-	int pointsCount = x.size();
-
-	for ( size_t i = 0; i < pointsCount; ++i )
-	{
-		double temp = y.at( i );
-		for ( size_t j = 0; j < pointsCount; ++j )
-		{
-			if ( i != j )
-			{
-				temp *= ( xInterpolate - x.at( j ) ) / ( x.at( i ) - x.at( j ) );
-			}
-		}
-
-		result += temp;
-	}
-
-	return result;
 }
 
 void CTema5Dlg::DrawCurve( CDC* pDC )

@@ -11,6 +11,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "Bezier.h"
 
 #define DOT_SIZE 7
 
@@ -137,31 +138,6 @@ void CTema8Dlg::OnMouseMove( UINT nFlags, CPoint point )
 	Invalidate();
 }
 
-unsigned long long Factorial( int n )
-{
-	return ( n <= 1 ) ? 1 : n * Factorial( n - 1 );
-}
-
-double Combination( int n, int k )
-{
-	return Factorial( n ) / ( Factorial( k ) * Factorial( n - k ) );
-}
-
-CPoint ComputeBezierPoint( double t, const std::vector<CPoint>& controlPoints )
-{
-	CPoint point;
-	int n = controlPoints.size() - 1;
-
-	for ( int i = 0; i <= n; i++ )
-	{
-		double bernstein = Combination( n, i ) * pow( t, i ) * pow( 1 - t, n - i );
-		point.x = point.x + controlPoints[i].x * bernstein;
-		point.y = point.y + controlPoints[i].y * bernstein;
-	}
-
-	return point;
-}
-
 void CTema8Dlg::DrawCurve( CDC* pDC )
 {
 	CPen blackPen( 0, 3, RGB( 0, 0, 0 ) );
@@ -172,7 +148,7 @@ void CTema8Dlg::DrawCurve( CDC* pDC )
 
 	for ( double t = 0.0; t <= 1; t += 0.01 )
 	{
-		CPoint curvePoint = ComputeBezierPoint( t, m_controllPoints );
+		CPoint curvePoint = Bezier( t, m_controllPoints );
 
 		pDC->LineTo( curvePoint );
 		// prepare for next one

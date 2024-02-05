@@ -51,14 +51,16 @@ std::vector<Point> generateCurve( double a, double b, int numPoints ) {
 	return points;
 }
 
-void transformPoints( std::vector<Point>& points, double screenWidth, double screenHeight ) {
-
+void transformPoints( std::vector<Point>& points, double screenWidth, double screenHeight ) 
+{
 	Point origin( 0, 0 );
 
 	// Pasul 1 - translatam punctele Pi
 	double dx = std::min_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.x < b.x; } )->x;
 	double dy = std::min_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.y < b.y; } )->y;
-	for ( auto& p : points ) {
+	
+	for ( auto& p : points )
+	{
 		p.x -= dx;
 		p.y -= dy;
 	}
@@ -68,8 +70,9 @@ void transformPoints( std::vector<Point>& points, double screenWidth, double scr
 	double maxY = std::max_element( points.begin(), points.end(), [] ( const Point& a, const Point& b ) { return a.y < b.y; } )->y;
 	double scaleX = screenWidth / maxX;
 	double scaleY = screenHeight / maxY;
-	double scale = scaleX < scaleY ? scaleX : scaleY; // min(scaleX, scaleY)
-	for ( auto& p : points ) {
+	double scale = scaleX < scaleY ? scaleX : scaleY;
+	for ( auto& p : points ) 
+	{
 		p.x *= scale;
 		p.y *= scale;
 	}
@@ -79,13 +82,15 @@ void transformPoints( std::vector<Point>& points, double screenWidth, double scr
 	maxY *= scale;
 	double offsetX = ( screenWidth - maxX ) / 2;
 	double offsetY = ( screenHeight - maxY ) / 2;
-	for ( auto& p : points ) {
+	for ( auto& p : points ) 
+	{
 		p.x += offsetX;
 		p.y += offsetY;
 	}
 
 	// Pasul 4 - simetrie pe verticala
-	for ( auto& p : points ) {
+	for ( auto& p : points ) 
+	{
 		p.y = screenHeight - p.y;
 	}
 }

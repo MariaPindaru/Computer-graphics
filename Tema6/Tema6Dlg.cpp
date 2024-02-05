@@ -11,6 +11,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "NewtonInterpolation.h"
 
 #define DOT_SIZE 7
 
@@ -103,10 +104,10 @@ void CTema6Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	if ( m_bCollectingPoints )
 	{
-		if ( m_points.empty() || point.x > m_points.back().x ) 
-		{
+		//if ( m_points.empty() || point.x > m_points.back().x ) 
+		//{
 			m_points.push_back( point );
-		}
+		//}
 	}
 	else
 	{
@@ -135,70 +136,25 @@ void CTema6Dlg::OnMouseMove( UINT nFlags, CPoint point )
 	if ( !m_selectedPoint )
 		return;
 
-	if ( m_selectedPoint != &m_points.front() )
-	{
-		CPoint* prev = ( m_selectedPoint - 1 );
-		if ( prev->x > point.x )
-			return;
-	}
+	//if ( m_selectedPoint != &m_points.front() )
+	//{
+	//	CPoint* prev = ( m_selectedPoint - 1 );
+	//	if ( prev->x > point.x )
+	//		return;
+	//}
 
-	if ( m_selectedPoint != &m_points.back() )
-	{
-		CPoint* next = ( m_selectedPoint + 1 );
-		if ( next->x < point.x )
-			return;
-	}
+	//if ( m_selectedPoint != &m_points.back() )
+	//{
+	//	CPoint* next = ( m_selectedPoint + 1 );
+	//	if ( next->x < point.x )
+	//		return;
+	//}
 
 	m_selectedPoint->x = point.x;
 	m_selectedPoint->y = point.y;
 
 	Invalidate();
 }
-
-std::vector<double> ComputeNewtonCoefficients( const std::vector<double>& x, const std::vector<double>& y )
-{
-	int pointsCount = x.size();
-	std::vector<std::vector<double>> a( pointsCount, std::vector<double>( pointsCount ) );
-
-
-	//  i = j  => aij = Y[i]i
-	for ( int i = 0; i < pointsCount; ++i )
-	{
-		a[i][i] = y[i];
-	}
-
-	//	i != j => aij = a[i + 1][j] - a[i][j - 1] / x[j] - x[i], 0 <= i <= j <= n
-	for ( int i = pointsCount - 1; i >= 0; --i )
-	{
-		for ( size_t j = i + 1; j < pointsCount; ++j )
-		{
-			a[i][j] = ( a[i + 1][j] - a[i][j - 1] ) / ( x[j] - x[i] );
-		}
-	}
-
-	std::vector<double> coefficients;
-	for ( int j = 0; j < pointsCount; ++j )
-	{
-		coefficients.push_back( a[0][j] );
-	}
-
-	return coefficients;
-}
-
-double GetNewtonPolynomial( const std::vector<double>& x, const std::vector<double>& coefficients, double xInterpolate ) 
-{
-	double result = 0;
-	double product = 1;
-
-	for ( int i = 0; i < x.size(); ++i )
-	{
-		result += coefficients[i] * product;
-		product *= ( xInterpolate - x[i] );
-	}
-
-	return result;
-}
-
 
 void CTema6Dlg::DrawCurve( CDC* pDC )
 {
@@ -222,7 +178,7 @@ void CTema6Dlg::DrawCurve( CDC* pDC )
 
 	for ( double xInterpolate = xCoordinates.front(); xInterpolate <= xCoordinates.back(); xInterpolate += 0.1 )
 	{
-		double yInterpolate = GetNewtonPolynomial( xCoordinates, coefficients, xInterpolate );
+		double yInterpolate = NewtonInterpolation( xCoordinates, coefficients, xInterpolate );
 
 		pDC->LineTo( xInterpolate, yInterpolate );
 		// prepare for next one
