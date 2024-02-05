@@ -104,10 +104,10 @@ void CTema6Dlg::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	if ( m_bCollectingPoints )
 	{
-		//if ( m_points.empty() || point.x > m_points.back().x ) 
-		//{
+		if ( m_points.empty() || point.x > m_points.back().x ) 
+		{
 			m_points.push_back( point );
-		//}
+		}
 	}
 	else
 	{
@@ -136,19 +136,19 @@ void CTema6Dlg::OnMouseMove( UINT nFlags, CPoint point )
 	if ( !m_selectedPoint )
 		return;
 
-	//if ( m_selectedPoint != &m_points.front() )
-	//{
-	//	CPoint* prev = ( m_selectedPoint - 1 );
-	//	if ( prev->x > point.x )
-	//		return;
-	//}
+	if ( m_selectedPoint != &m_points.front() )
+	{
+		CPoint* prev = ( m_selectedPoint - 1 );
+		if ( prev->x > point.x )
+			return;
+	}
 
-	//if ( m_selectedPoint != &m_points.back() )
-	//{
-	//	CPoint* next = ( m_selectedPoint + 1 );
-	//	if ( next->x < point.x )
-	//		return;
-	//}
+	if ( m_selectedPoint != &m_points.back() )
+	{
+		CPoint* next = ( m_selectedPoint + 1 );
+		if ( next->x < point.x )
+			return;
+	}
 
 	m_selectedPoint->x = point.x;
 	m_selectedPoint->y = point.y;
