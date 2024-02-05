@@ -40,7 +40,7 @@ private:
 	void DrawCurve( CDC* pDC );
 
 private:
-	std::vector<CPoint> m_controllPoints;
+	std::vector<CPoint> m_controlPoints;
 	CPoint* m_pSelectedPoint;
 	bool m_bCollectingPoints;
 };
