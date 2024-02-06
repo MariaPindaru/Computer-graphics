@@ -20,8 +20,10 @@ std::array<double, SIZE> Transformation2D::Product( const std::array<double, SIZ
 {
 	std::array<double, SIZE> result = { 0.0, 0.0, 0.0 };
 
-	for ( size_t row_index = 0; row_index < SIZE; ++row_index ) {
-		for ( size_t column_index = 0; column_index < SIZE; ++column_index ) {
+	for ( size_t row_index = 0; row_index < SIZE; ++row_index ) 
+	{
+		for ( size_t column_index = 0; column_index < SIZE; ++column_index ) 
+		{
 			result[row_index] += m_matrix[row_index][column_index] * point[column_index];
 		}
 	}
@@ -33,10 +35,13 @@ std::array<std::array<double, SIZE>, SIZE> Transformation2D::Product( const std:
 {
 	std::array<std::array<double, SIZE>, SIZE> result;
 
-	for ( int i = 0; i < SIZE; ++i ) {
-		for ( int j = 0; j < SIZE; ++j ) {
+	for ( int i = 0; i < SIZE; ++i ) 
+	{
+		for ( int j = 0; j < SIZE; ++j ) 
+		{
 			result[i][j] = 0;
-			for ( int k = 0; k < SIZE; ++k ) {
+			for ( int k = 0; k < SIZE; ++k ) 
+			{
 				result[i][j] += m_matrix[i][k] * matrix[k][j];
 			}
 		}
