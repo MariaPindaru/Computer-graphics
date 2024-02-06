@@ -91,6 +91,7 @@ CPoint BSplineDeBoor( double t, int degree, const std::vector<CPoint>& points )
 		// build level of the pyramid
 		for ( int i = splineSegment; i > splineSegment - degree - 1 + level; i-- )
 		{
+			// determines how much influence each control point has on the interpolation at the current level
 			double alpha = ( t - knots[i] ) / ( knots[i + degree + 1 - level] - knots[i] );
 
 			// interpolate each component
