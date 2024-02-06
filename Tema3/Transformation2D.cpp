@@ -101,10 +101,12 @@ void Transformation2D::SymmetryPoint( double xp, double yp )
 
 void Transformation2D::SymmetryLine( double startX, double startY, double endX, double endY )
 {
-	double length = sqrt( endX * endX + endY * endY );
+	double length = sqrt( ( endX - startX ) * ( endX - startX ) + ( endY - startY ) * ( endY - startY ) );
+
 	if ( length != 0 ) {
-		double cosineAlpha = endX / length;
-		double sineAlpha = endY / length;
+		// rotation
+		double cosineAlpha = ( endX - startX ) / length;
+		double sineAlpha = ( endY - startY ) / length;
 
 		Translate( startX, startY );
 		RotateOrigin( cosineAlpha, sineAlpha );

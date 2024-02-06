@@ -194,7 +194,6 @@ BOOL CTema3Dlg::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
 		Invalidate();
 	}
 
-
 	return CDialogEx::OnMouseWheel( nFlags, zDelta, point );
 }
 
